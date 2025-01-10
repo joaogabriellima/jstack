@@ -9,6 +9,7 @@ As aulas abordaram conceitos básicos de criação de APIs REST com Node.js, com
 - Adicionei um arquivo package.json e yarn.lock devido à minha preferência por usar o Yarn como gerenciador de pacotes.
 - Disponibilizei a collection do Insomnia utilizada durante o desenvolvimento, para facilitar a verificação e o teste dos endpoints.
 - Na aula sobre query params, ao invés de implementar apenas a ordenação desc e asc, criei uma funcionalidade extra que permite filtrar os usuários de acordo com o nome fornecido no parâmetro name.
+- Fiz um arquivo de rotas centralizado para o caso da necessidade da criação de mais controllers
 
 ## Estrutura do Projeto
 
