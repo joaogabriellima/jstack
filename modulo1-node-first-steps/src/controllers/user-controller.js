@@ -3,8 +3,7 @@ const users = require('../mocks/users');
 const UserController = {
   listUsers: (request, response) => {
     const filteredUsers = filterUsers(request.query);
-    response.writeHead(200, { 'content-type': 'application/json' });
-    response.end(JSON.stringify(filteredUsers));
+    response.send(200, filteredUsers);
   },
 
   getUserById: (request, response) => {
@@ -13,14 +12,73 @@ const UserController = {
     const foundUser = filterUserById(id);
 
     if (!foundUser) { 
-      response.writeHead(404, { 'content-type': 'application/json' });
-      response.end(JSON.stringify({ message: 'User not found' }));
+      response.send(404, { error: 'User not found' })
       return;
     }
 
-    response.writeHead(200, { 'content-type': 'application/json' });
-    response.end(JSON.stringify(filterUserById(id)));
+    response.send(200, filterUserById(id));
   },
+
+  createUser: (request, response) => {
+    const { name, email } = request.body;
+
+    if (!name || !email) {
+      response.send(400, { error: 'Name and email are required' });
+      return;
+    }
+
+    const newUser = {
+      id: users.length + 1,
+      name,
+      email
+    };
+
+    users.push(newUser);
+
+    response.send(201, newUser);
+  },
+
+  updateUser: (request, response) => {
+    const { id } = request.params;
+    const { name, email } = request.body;
+
+    if (!name || !email) {
+      response.send(400, { error: 'Name and email are required' });
+      return;
+    }
+
+    const updatedUser = {
+      id: Number(id),
+      name, 
+      email
+    };
+
+    const userIndex = users.findIndex((user) => user.id == id);
+
+    if (userIndex == -1) {
+      response.send(404, { error: 'User not found' });
+      return;
+    }
+
+    users[userIndex] = updatedUser;
+
+    response.send(200, updatedUser);
+  },
+
+  deleteUser: (request, response) => {
+    const { id } = request.params;
+
+    const userIndex = users.findIndex((user) => user.id == id);
+
+    if (userIndex == -1) {
+      response.send(404, { error: 'User not found' });
+      return;
+    }
+
+    users.splice(userIndex, 1);
+
+    response.send(201, { message: 'User deleted successfully' });
+  }
 };
 
 const filterUsers = (query) => {
