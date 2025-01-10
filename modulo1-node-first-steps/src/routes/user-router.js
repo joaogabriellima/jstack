@@ -9,13 +9,8 @@ const userRouter = [
   {
     endpoint: '/users/:id',
     method: 'GET',
-    handler: UserController.listUsers,
+    handler: UserController.getUserById,
   },
-  {
-    endpoint: '/users',
-    method: 'POST',
-    handler: UserController.addUser,
-  }
 ];
 
 module.exports = userRouter;

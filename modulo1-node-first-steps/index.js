@@ -6,11 +6,15 @@ const routes = require('./src/routes/routes');
 const server = http.createServer((request, response) => {
   const parsedUrl = new URL(`http://localhost:3000${request.url}`);
 
-  request.query = Object.fromEntries(parsedUrl.searchParams);
-
   let { pathname } = parsedUrl;
+  let id = null;
 
   const splittedEndpoint = pathname.split('/').filter((endpointItem) => Boolean(endpointItem));
+
+  if (splittedEndpoint.length > 1) {
+    pathname = `/${splittedEndpoint[0]}/:id`;
+    id = splittedEndpoint[1];
+  }
 
   const currentRoute = routes.find((routeObj) => (
     routeObj.endpoint === pathname &&
@@ -28,6 +32,9 @@ const server = http.createServer((request, response) => {
     response.end('<h1>Um erro aconteceu aqui! 404!</h1>');
     return;
   }
+
+  request.query = Object.fromEntries(parsedUrl.searchParams);
+  request.params = { id };
 
   currentRoute.handler(request, response);
 });

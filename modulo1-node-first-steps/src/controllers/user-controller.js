@@ -8,25 +8,33 @@ const UserController = {
   },
 
   getUserById: (request, response) => {
-    response.writeHead(200, { 'content-type': 'application/json' });
-    response.end(JSON.stringify(filteredUsers));
-  },
+    const { id } = request.params;
 
-  addUser: (request, response) => {
-    console.log('not implemented yet');
-  }
+    const foundUser = filterUserById(id);
+
+    if (!foundUser) { 
+      response.writeHead(404, { 'content-type': 'application/json' });
+      response.end(JSON.stringify({ message: 'User not found' }));
+      return;
+    }
+
+    response.writeHead(200, { 'content-type': 'application/json' });
+    response.end(JSON.stringify(filterUserById(id)));
+  },
 };
 
 const filterUsers = (query) => {
-  console.log("🚀 ~ filterUsers ~ query:", query)
   if (!query || Object.keys(query).length == 0) return users;
 
   const { name } = query;
 
   const filteredUsers = users.filter((user) => user.name.toLowerCase().includes(name));
-  console.log("🚀 ~ filterUsers ~ filteredUsers:", filteredUsers)
 
   return filteredUsers;
+}
+
+const filterUserById = (id) => {
+  return users.find((user) => user.id == id);
 }
 
 module.exports = UserController;
